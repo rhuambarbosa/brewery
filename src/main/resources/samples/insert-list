@@ -1,0 +1,47 @@
+[
+  {
+    "beerStyle" : "Weissbier",
+    "temperatureMin" : -1,
+    "temperatureMax": 3
+  },
+  {
+    "beerStyle" : "Pilsens",
+    "temperatureMin" : -2,
+    "temperatureMax": 4
+  },
+  {
+    "beerStyle" : "Weizenbier",
+    "temperatureMin" : -4,
+    "temperatureMax": 6
+  },
+  {
+    "beerStyle" : "Red ale",
+    "temperatureMin" : -5,
+    "temperatureMax": 5
+  },
+  {
+    "beerStyle" : "India pale ale",
+    "temperatureMin" : -6,
+    "temperatureMax": 7
+  },
+  {
+    "beerStyle" : "IPA",
+    "temperatureMin" : -7,
+    "temperatureMax": 10
+  },
+  {
+    "beerStyle" : "Dunkel",
+    "temperatureMin" : -8,
+    "temperatureMax": 2
+  },
+  {
+    "beerStyle" : "Imperial Stouts",
+    "temperatureMin" : -10,
+    "temperatureMax": 13
+  },
+  {
+    "beerStyle" : "Brown ale",
+    "temperatureMin" : 0,
+    "temperatureMax": 14
+  }
+]

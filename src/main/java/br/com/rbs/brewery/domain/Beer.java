@@ -1,7 +1,5 @@
 package br.com.rbs.brewery.domain;
 
-import org.springframework.beans.factory.annotation.Value;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,20 +9,30 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class Beer {
 
+    public Beer() {
+        super();
+    }
+
+    public Beer(String beerStyle, Integer temperatureMin, Integer temperatureMax) {
+        this.beerStyle = beerStyle;
+        this.temperatureMin = temperatureMin;
+        this.temperatureMax = temperatureMax;
+    }
+
     @Id
     @GeneratedValue
     @Column(name = "ID")
     private Integer id;
 
     @NotNull(message = "Estilo de cerveja é obrigatório")
-    @Column(name = "BEER_STYLE")
+    @Column(name = "BEER_STYLE", unique = true)
     private String beerStyle;
 
     @NotNull(message = "Temperatura mínima é obrigatório")
     @Column(name = "TEMP_MIN")
     private Integer temperatureMin;
 
-    @NotNull(message = "Estilo máxima é obrigatório")
+    @NotNull(message = "Temperatura máxima é obrigatório")
     @Column(name = "TEMP_MAX")
     private Integer temperatureMax;
 
