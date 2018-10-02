@@ -43,7 +43,7 @@ public class BeerController {
     }
 
     @DeleteMapping("/beers/{id}")
-    public void deleteStudent(@PathVariable Integer id) {
+    public void deleteBeer(@PathVariable Integer id) {
         beerRepository.deleteById(id);
     }
 
