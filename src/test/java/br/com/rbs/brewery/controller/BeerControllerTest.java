@@ -2,22 +2,27 @@ package br.com.rbs.brewery.controller;
 
 import br.com.rbs.brewery.domain.Beer;
 import br.com.rbs.brewery.repository.BeerRepository;
+import br.com.rbs.brewery.service.BeerService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
+import static org.mockito.MockitoAnnotations.initMocks;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -31,9 +36,12 @@ public class BeerControllerTest {
     @InjectMocks
     private BeerController beerController;
 
+    @InjectMocks
+    private BeerService beerServiceMocked;
+
     @Before
     public void init() {
-        MockitoAnnotations.initMocks(this);
+        initMocks(this);
         mockMvc = MockMvcBuilders
                 .standaloneSetup(beerController)
                 .build();
@@ -118,20 +126,68 @@ public class BeerControllerTest {
     }
 
     @Test
-    public void retrieveAllBeers() {
+    public void retrieveAllBeers() throws Exception {
+        mockMvc.perform(
+                get("/beer/beers/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(beerRepositoryMocked, times(1)).findAll();
     }
 
     @Test
-    public void retrieveBeer() {
+    public void retrieveBeer() throws Exception {
+        Optional<Beer> beer = Optional.of(new Beer());
+        when(beerRepositoryMocked.findById(Mockito.any())).thenReturn(beer);
+
+        mockMvc.perform(
+                get("/beer/beers/{1}", 1)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(beerRepositoryMocked, times(1)).findById(Mockito.any());
     }
 
     @Test
-    public void findPaginated() {
+    public void retrieveBeerNotFound() throws Exception {
+        when(beerRepositoryMocked.findById(Mockito.any())).thenReturn(Optional.empty());
+        mockMvc.perform(
+                get("/beer/beers/{1}", 1)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+
+        verify(beerRepositoryMocked, times(1)).findById(Mockito.any());
     }
 
     @Test
-    public void retrieveBestBeer() {
-        //TODO: Implementar comforme a montagem do algotritimo.
+    public void findPaginated() throws Exception {
+        List<Beer> beers = new ArrayList<>();
+        Page<Beer> pagedResponse = new PageImpl(beers);
+        PageRequest pageRequest = new PageRequest(0, 3, Sort.Direction.ASC, "beerStyle");
+        when(beerRepositoryMocked.findAll(pageRequest)).thenReturn((pagedResponse));
+
+        mockMvc.perform(
+                get("/beer/beers", 0, 3)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+    }
+
+    @Test
+    public void retrieveBestBeer() throws Exception {
+        /*initMocks(this);
+        when(beerServiceMocked.retrieveBestBeer(5)).thenReturn(new BestBeerDTO());
+        mockMvc.perform(
+                get("/beer/best-beers/{temperature}",5)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(beerServiceMocked, times(1)).retrieveBestBeer(Mockito.any());*/
     }
 
     private static String asJsonString(final Object obj) {
