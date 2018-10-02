@@ -52,3 +52,9 @@ Iniciando em docker
 Bonus
 - Se quiser compilar sua imagem em docker e ainda inicia-la de modo automatico execute o seguinte comando: ./gradlew clean build-start-docker
 - Pronto sua aplicação esta no ar e rodando na porta 8082, fique de olho no pré requisito, pois você precisa ter o docker instalado na sua maquina.
+
+
+Pendências:
+   - Recuperação de melhor cerveja
+   - Integração com spotfy
+   - Compilação com gradle gerando imagem.
