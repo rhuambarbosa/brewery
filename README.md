@@ -53,3 +53,8 @@ Iniciando em docker
 - Pronto vc pode utilizar os recursos da aplicação através das funcionaliades listadas acima.
 - Utilize o postman - https://www.getpostman.com/
 - Dentro da pasta resources/sample existes alguns modelos de json previamente configurados que podem ser utilizados para inserir um novo tipo de cerveja ou uma lista de tipos decerveja.
+
+Pendências:
+   - Recuperação de melhor cerveja
+   - Integração com spotfy
+
