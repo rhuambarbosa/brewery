@@ -39,16 +39,17 @@ Inicando a aplicação
 - A Aplicação esta rodando na porta 8082
 
 Build aplication em Docker
-- Dentro da pasta raiz do projeto onde contenha o arquivo Dockerfile e build.gradle execute o seguinte comando: ./gradlew clean buil
-este comoando realizara o build da sua aplicação gerando um jar e a imagem do mesmo.
+- Na raiz do projeto ou pelo terminal de sua IDE execute o comando ./gradlew clean build buildDocker 
+- Verifique a sua imagem gerada através do comando docker images deve aparecer o repositorio e a tag como descrito abaixo
+
+| REPOSITORY     | TAG    | IMAGE | 
+| --------|---------|-------|
+| br.com.rbs/brewery  | 0.0.1-SNAPSHOT | d5744c9d24a5 |
+
 
 Iniciando em docker
 
-- Com sua imagem criada basta executar o seguinte comando
-- Pronto vc pode consumir os recursos da aplicação através das funcionaliades listadas acima.
+- Com sua imagem criada basta executar o seguinte comando: docker run -p8082:8082 br.com.rbs/brewery:0.0.1-SNAPSHOT
+- Pronto vc pode utilizar os recursos da aplicação através das funcionaliades listadas acima.
 - Utilize o postman - https://www.getpostman.com/
 - Dentro da pasta resources/sample existes alguns modelos de json previamente configurados que podem ser utilizados para inserir um novo tipo de cerveja ou uma lista de tipos decerveja.
-
-Bonus
-- Se quiser compilar sua imagem em docker e ainda inicia-la de modo automatico execute o seguinte comando: ./gradlew clean build-start-docker
-- Pronto sua aplicação esta no ar e rodando na porta 8082, fique de olho no pré requisito, pois você precisa ter o docker instalado na sua maquina.
