@@ -67,6 +67,6 @@ public class BeerServiceTest {
         beer.setTemperatureMin(-2);
 
         Set<ConstraintViolation<Beer>> violations = validator.validate(beer);
-        Assert.assertEquals("Estilo máxima é obrigatório", violations.iterator().next().getMessageTemplate());
+        Assert.assertEquals("Temperatura máxima é obrigatório", violations.iterator().next().getMessageTemplate());
     }
 }
