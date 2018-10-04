@@ -55,6 +55,5 @@ Iniciando em docker
 - Dentro da pasta resources/sample existes alguns modelos de json previamente configurados que podem ser utilizados para inserir um novo tipo de cerveja ou uma lista de tipos decerveja.
 
 Pendências:
-   - Recuperação de melhor cerveja
    - Integração com spotfy
 
