@@ -1,9 +1,6 @@
 package br.com.rbs.brewery.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -36,6 +33,9 @@ public class Beer {
     @Column(name = "TEMP_MAX")
     private Integer temperatureMax;
 
+    @Transient
+    private int targetTemperature;
+
     public Integer getId() {
         return id;
     }
@@ -66,5 +66,26 @@ public class Beer {
 
     public void setTemperatureMax(Integer temperatureMax) {
         this.temperatureMax = temperatureMax;
+    }
+
+    public void setTargetTemperature(int targetTemperature) {
+        this.targetTemperature = targetTemperature;
+    }
+
+    /*
+        Retorna 0 se a temperatura informada estiver dentro do range de bebida ideal,
+        caso negativo retorna a menor diferença de temperatura.
+        Ex: -2 temperatura min e max -5 e 0 retorna 0
+        EX: -2 temperatura min e max 0 e 3 retorna 2, pois para chegar em 0 precisa de 2
+        EX: 4 temperatura min e max 0 e 3 retorna 1
+     */
+    public int getDifference() {
+        return (targetTemperature >= temperatureMin && targetTemperature <= temperatureMax) ? 0 : lessDifference(targetTemperature);
+    }
+
+    private int lessDifference(int temperature) {
+        int min = Math.abs(temperatureMin - temperature);
+        int max = Math.abs(temperatureMax - temperature);
+        return Math.min(min, max);
     }
 }

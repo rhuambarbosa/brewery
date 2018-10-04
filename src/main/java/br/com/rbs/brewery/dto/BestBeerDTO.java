@@ -4,8 +4,12 @@ public class BestBeerDTO {
 
     private String beerStyle;
 
-    //playlist
+    public BestBeerDTO() {
+    }
 
+    public BestBeerDTO(String beerStyle) {
+        this.beerStyle = beerStyle;
+    }
 
     public String getBeerStyle() {
         return beerStyle;

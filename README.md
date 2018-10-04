@@ -3,15 +3,14 @@
 O sistema realiza um CRUD para cadastro de tipos de cerveja e sua temperatura miníma e máxima ideal para consumo.
 Retorna a melhor cerveja com base no tipo informado junto com uma playlist do spotfy com o nome da cerveja.
 
-Tecnologias:
-- Java 8
-- Gradle
-- Spring
-- Docker
+Observações
+- Para o cuncionamento da aplicação é necessario possui o java e o gradle instalados, se for compilar imagem e subir em ambiente docker é necessario o docker esta instalado.
 
-Pré requisitos
-- Java - https://www.oracle.com/technetwork/pt/java/javase/downloads/jdk8-downloads-2133151.html
-- Docker - https://docs.docker.com/install/
+Tecnologias:
+- Java 8(https://www.oracle.com/technetwork/pt/java/javase/downloads/jdk8-downloads-2133151.html)
+- Gradle(https://gradle.org/install/)
+- Docker(https://docs.docker.com/install/)
+- Spring
 
 - Json de cadastro exemplo
 {
