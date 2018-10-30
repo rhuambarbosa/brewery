@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import java.util.Optional;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class BeerControllerTest {
@@ -57,6 +59,19 @@ public class BeerControllerTest {
                 .andExpect(status().isOk());
 
         verify(beerRepositoryMocked, times(1)).save(Mockito.any());
+    }
+
+    @Test
+    public void createOrUpdateBeerHttpStatusINTERNAL_SERVER_ERROR() throws Exception {
+        when(beerRepositoryMocked.save(any())).thenThrow(Exception.class);
+
+        Beer beer = new Beer("Beer 1", 1, 2);
+        this.mockMvc.perform(
+                post("/beer/beers")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(beer)))
+                .andExpect(content().string("Falha ao salvar a entidade Beer"))
+                .andExpect(status().isInternalServerError());
     }
 
     @Test
@@ -141,11 +156,13 @@ public class BeerControllerTest {
         Optional<Beer> beer = Optional.of(new Beer());
         when(beerRepositoryMocked.findById(Mockito.any())).thenReturn(beer);
 
-        mockMvc.perform(
-                get("/beer/beers/{1}", 1)
+        MvcResult result = mockMvc
+                .perform(get("/beer/beers/{1}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                        .accept(MediaType.APPLICATION_JSON)).andReturn();
+//                .andExpect(status().isOk()).andReturn();
+
+        String content = result.getResponse().getContentAsString();
 
         verify(beerRepositoryMocked, times(1)).findById(Mockito.any());
     }

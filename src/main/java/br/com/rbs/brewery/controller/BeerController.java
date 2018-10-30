@@ -49,6 +49,7 @@ public class BeerController {
         HttpStatus status = HttpStatus.OK;
         final List<Beer> response = new ArrayList();
         try {
+
             for (Beer beer : beers) {
                 response.add(beerRepository.save(beer));
             }
