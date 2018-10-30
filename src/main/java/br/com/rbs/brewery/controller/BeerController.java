@@ -28,28 +28,80 @@ public class BeerController {
     private BeerRepository beerRepository;
 
     @PostMapping("/beers")
-    public Beer createOrUpdateBeer(@RequestBody @Validated Beer beer) {
-        return beerRepository.save(beer);
+    public ResponseEntity<Beer> createOrUpdateBeer(@RequestBody @Validated Beer beer) {
+        Object body;
+        HttpStatus status = HttpStatus.OK;
+
+        try {
+            body = beerRepository.save(beer);
+        } catch (Exception e) {
+            e.printStackTrace();
+            body = "Falha ao salvar a entidade Beer";
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+
+        return new ResponseEntity(body, status);
     }
 
     @PutMapping("/beers")
-    public List<Beer> createOrUpdateBeer(@RequestBody Beer[] beers) {
-        List<Beer> response = new ArrayList();
-        for (Beer beer : beers) {
-            response.add(beerRepository.save(beer));
+    public ResponseEntity<List<Beer>> createOrUpdateBeer(@RequestBody Beer[] beers) {
+        Object body;
+        HttpStatus status = HttpStatus.OK;
+        final List<Beer> response = new ArrayList();
+        try {
+            for (Beer beer : beers) {
+                response.add(beerRepository.save(beer));
+            }
+
+            body = response;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            body = "Falha ao salvar a entidade Beer";
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
 
-        return response;
+        return new ResponseEntity(body, status);
     }
 
     @DeleteMapping("/beers/{id}")
-    public void deleteBeer(@PathVariable Integer id) {
-        beerRepository.deleteById(id);
+    public ResponseEntity<String> deleteBeer(@PathVariable Integer id) {
+        Object body = "Entidade " + id + " removido com sucesso.";
+        HttpStatus status = HttpStatus.OK;
+        try {
+            beerRepository.deleteById(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            body = "Falha ao remover a entidade Beer id: " + id;
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+
+        return new ResponseEntity(body, status);
     }
 
     @GetMapping("/beers")
-    public List<Beer> retrieveAllBeers() {
-        return beerRepository.findAll();
+    public ResponseEntity<List<Beer>> retrieveAllBeers() {
+        Object body;
+        HttpStatus status = HttpStatus.OK;
+        List<Beer> beers;
+
+        final List<Beer> response = new ArrayList();
+        try {
+            beers = beerRepository.findAll();
+
+            if (beers.isEmpty()) {
+                body = "Nenhuma beers cadastrada.";
+                status = HttpStatus.NO_CONTENT;
+            } else {
+                body = beers;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            body = "Falha ao recureprar lista";
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+
+        return new ResponseEntity(body, status);
     }
 
     @GetMapping("/beers/{id}")
@@ -59,25 +111,61 @@ public class BeerController {
 
         Optional<Beer> beer = beerRepository.findById(id);
 
-        if (!beer.isPresent()) {
-            body = "ID: " + id + " não localizado";
-            status = HttpStatus.NO_CONTENT;
-        } else {
-            body = beer.get();
+        try {
+            if (!beer.isPresent()) {
+                body = "ID: " + id + " não localizado";
+                status = HttpStatus.NO_CONTENT;
+            } else {
+                body = beer.get();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            body = "Falha ao recuperar o ID: " + id;
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
 
         return new ResponseEntity(body, status);
     }
 
     @GetMapping(value = "/beers", params = {"page", "size"})
-    public List<Beer> findPaginated(@RequestParam("page") int page, @RequestParam("size") int size) {
-        PageRequest pageRequest = new PageRequest(page, size, Sort.Direction.ASC,"beerStyle");
-        Page<Beer> beers = beerRepository.findAll(pageRequest);
-        return beers.getContent();
+    public ResponseEntity<List<Beer>> findPaginated(@RequestParam("page") int page, @RequestParam("size") int size) {
+        Object body = null;
+        HttpStatus status = HttpStatus.OK;
+        Page<Beer> beers = null;
+
+        try {
+            PageRequest pageRequest = new PageRequest(page, size, Sort.Direction.ASC, "beerStyle");
+            beers = beerRepository.findAll(pageRequest);
+            if (!beers.hasContent()) {
+                body = "Nenhuma cerveja localizada.";
+                status = HttpStatus.NO_CONTENT;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            body = "Falha ao recuperar cervejas.";
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+
+        return body == null ? new ResponseEntity(beers.getContent(), status) : new ResponseEntity(body, status);
     }
 
     @GetMapping("/best-beers/{temperature}")
-    public BestBeerDTO retrieveBestBeer(@PathVariable Integer temperature) {
-        return beerService.retrieveBestBeer(temperature);
+    public ResponseEntity<BestBeerDTO> retrieveBestBeer(@PathVariable Integer temperature) {
+        Object body;
+        HttpStatus status = HttpStatus.OK;
+        try {
+            body = beerService.retrieveBestBeer(temperature);
+
+            if (body == null) {
+                body = "Temperatura: " + temperature + " não localizado a cerveja ideal";
+                status = HttpStatus.NO_CONTENT;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            body = "falha ao recuperar a cerveja ideal.";
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+
+        return new ResponseEntity(body, status);
     }
 }
